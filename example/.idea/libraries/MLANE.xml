@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="MLANE" type="flex">
+    <CLASSES>
+      <root url="jar://$DOCUMENTS$/FreSharp/starter_project_uwp/native_extension/ane/MLANE.ane!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
