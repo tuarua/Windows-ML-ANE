@@ -83,7 +83,7 @@ namespace MLANELib {
                         results.Sort((p1, p2) => p2.Result.CompareTo(p1.Result));
                         var costTime = (DateTime.Now - startTime).TotalSeconds;
                         Trace("Time taken to evaluate", costTime, "seconds");
-                        SendEvent(Result, res.SceneLabel.FirstOrDefault());
+                        DispatchEvent(Result, res.SceneLabel.FirstOrDefault());
                     }
                 }
             }
