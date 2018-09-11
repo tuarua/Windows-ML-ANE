@@ -1,3 +1,6 @@
+### 0.0.4
+- Updated to FreSharp 2.0.0
+
 ### 0.0.3
 - Updated to FreSharp 1.7.0
 
