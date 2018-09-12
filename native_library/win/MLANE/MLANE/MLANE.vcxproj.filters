@@ -27,10 +27,10 @@
     <ClInclude Include="FreSharpMacros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\sdks\AIR\AIRSDK_29\include\FlashRuntimeExtensions.h">
+    <ClInclude Include="MLANE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MLANE.h">
+    <ClInclude Include="..\..\..\..\..\..\..\sdks\AIR\AIRSDK_30\include\FlashRuntimeExtensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

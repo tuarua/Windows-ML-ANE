@@ -97,5 +97,7 @@ namespace MLANELib {
         }
 
         public override void OnFinalize() { }
+
+        public override string TAG => "MainController";
     }
 }
