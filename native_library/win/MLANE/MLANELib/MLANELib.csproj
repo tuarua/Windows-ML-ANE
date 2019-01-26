@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.props" Condition="Exists('..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.props')" />
+  <Import Project="..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.props" Condition="Exists('..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -63,6 +63,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -82,32 +85,28 @@
     <Reference Include="Windows">
       <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\Facade\Windows.WinMD</HintPath>
     </Reference>
-    <Reference Include="Windows.AI.MachineLearning.Preview.MachineLearningPreviewContract">
-      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0\Windows.AI.MachineLearning.Preview.MachineLearningPreviewContract\1.0.0.0\Windows.AI.MachineLearning.Preview.MachineLearningPreviewContract.winmd</HintPath>
+    <Reference Include="Windows.AI.MachineLearning.MachineLearningContract, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17763.0\Windows.AI.MachineLearning.MachineLearningContract\1.0.0.0\Windows.AI.MachineLearning.MachineLearningContract.winmd</HintPath>
     </Reference>
     <Reference Include="Windows.Foundation.FoundationContract, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0\Windows.Foundation.FoundationContract\3.0.0.0\Windows.Foundation.FoundationContract.winmd</HintPath>
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17763.0\Windows.Foundation.FoundationContract\3.0.0.0\Windows.Foundation.FoundationContract.winmd</HintPath>
     </Reference>
     <Reference Include="Windows.Foundation.UniversalApiContract, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0\Windows.Foundation.UniversalApiContract\6.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
-    </Reference>
-    <Reference Include="Windows.System.UserProfile.UserProfileLockScreenContract, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0\Windows.System.UserProfile.UserProfileLockScreenContract\1.0.0.0\Windows.System.UserProfile.UserProfileLockScreenContract.winmd</HintPath>
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17763.0\Windows.Foundation.UniversalApiContract\7.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WinML\GoogLeNetPlacesModel.cs" />
-    <Compile Include="WinML\GoogLeNetPlacesModelInput.cs" />
-    <Compile Include="WinML\GoogLeNetPlacesModelOutput.cs" />
     <Compile Include="WinML\IMachineLearningModel.cs" />
     <Compile Include="WinML\IMachineLearningOutput.cs" />
-    <Compile Include="WinML\LabelResult.cs" />
     <Compile Include="MainController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WinML\SqueezeNetInput.cs" />
+    <Compile Include="WinML\SqueezeNetModel.cs" />
+    <Compile Include="WinML\SqueezeNetOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -117,8 +116,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.props'))" />
-    <Error Condition="!Exists('..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.targets'))" />
+    <Error Condition="!Exists('..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.props'))" />
+    <Error Condition="!Exists('..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.targets'))" />
   </Target>
-  <Import Project="..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.targets" Condition="Exists('..\packages\TuaRua.FreSharp.2.0.0\build\TuaRua.FreSharp.targets')" />
+  <Import Project="..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.targets" Condition="Exists('..\packages\TuaRua.FreSharp.2.1.0\build\TuaRua.FreSharp.targets')" />
 </Project>

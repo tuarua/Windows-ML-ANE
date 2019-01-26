@@ -1,6 +1,7 @@
 package {
 import com.tuarua.MLANE;
 import com.tuarua.MLEvent;
+import com.tuarua.fre.ANEError;
 
 import flash.desktop.NativeApplication;
 
@@ -12,9 +13,9 @@ import flash.events.MouseEvent;
 import flash.filesystem.File;
 import flash.text.TextField;
 
-[SWF(width="960", height="640", frameRate="60", backgroundColor="#F1F1F1")]
+[SWF(width="700", height="700", frameRate="60", backgroundColor="#FFFFFF")]
 public class Main extends Sprite {
-    [Embed(source="testImage.jpg")]
+    [Embed(source="cat.jpg")]
     public static const TestImage:Class;
     private var textField:TextField = new TextField();
     private var ane:MLANE = new MLANE();
@@ -22,7 +23,8 @@ public class Main extends Sprite {
 
     public function Main() {
         NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
-        textField.y = 10;
+        textField.x = 10;
+        textField.width = 200;
         testImage.y = 50;
         addChild(testImage);
         ane.addEventListener(MLEvent.RESULT, onANEEvent);
@@ -33,7 +35,15 @@ public class Main extends Sprite {
 
     private function onStageClick(event:MouseEvent):void {
         textField.text = "Analyzing image";
-        ane.predict(testImage.bitmapData, File.applicationDirectory.resolvePath("GoogLeNetPlaces.onnx").nativePath);
+        try {
+            ane.predict(File.applicationDirectory.resolvePath("cat.jpg").nativePath,
+                    File.applicationDirectory.resolvePath("SqueezeNet.onnx").nativePath);
+        } catch (e:ANEError) {
+            trace(e);
+            trace(e.message);
+            trace(e.getStackTrace());
+        }
+
     }
 
     private function onANEEvent(event:MLEvent):void {

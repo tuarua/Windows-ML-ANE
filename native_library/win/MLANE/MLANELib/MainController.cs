@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.AI.MachineLearning.Preview;
+using Windows.AI.MachineLearning;
 using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.Storage;
-using Windows.Storage.Streams;
 using MLANELib.WinML;
 using TuaRua.FreSharp;
-using TuaRua.FreSharp.Display;
 using TuaRua.FreSharp.Exceptions;
 using FREObject = System.IntPtr;
 using FREContext = System.IntPtr;
@@ -20,10 +16,8 @@ using FREContext = System.IntPtr;
 
 namespace MLANELib {
     public interface IMachineLearningInput { }
-
-
     public class MainController : FreSharpMainController {
-        private GoogLeNetPlacesModel _model;
+        private SqueezeNetModel _model;
         private const string Result = "MLANE.OnModelResult";
 
         // Must have this function. It exposes the methods to our entry C++.
@@ -37,55 +31,55 @@ namespace MLANELib {
         }
 
         public FREObject Predict(FREContext ctx, uint argc, FREObject[] argv) {
-            if (argv[0] == FREObject.Zero) return FREObject.Zero;
-            if (argv[1] == FREObject.Zero) return FREObject.Zero;
+            if (argv[0] == FREObject.Zero) {
+                return FREObject.Zero;
+            }
+            if (argv[1] == FREObject.Zero) {
+                return FREObject.Zero;
+            }
+            var imagePath = argv[0].AsString();
             var modelPath = argv[1].AsString();
-            var bmd = new FreBitmapDataSharp(argv[0]);
-            bmd.Acquire();
-            var ptr = bmd.Bits32;
-            var byteBuffer = new byte[bmd.LineStride32 * bmd.Height * 4];
-            Marshal.Copy(ptr, byteBuffer, 0, byteBuffer.Length);
-            bmd.Release();
             try {
-                EvaluteImageAsync(byteBuffer.AsBuffer(), bmd.Width, bmd.Height, modelPath);
+                EvaluateImageAsync(imagePath, modelPath);
             }
             catch (Exception e) {
                 return new FreException(e).RawValue;
             }
-
             return FREObject.Zero;
         }
 
-        private async Task EvaluteImageAsync(IBuffer buffer, int width, int height, string modelPath) {
-            var softwareBitmap =
-                SoftwareBitmap.CreateCopyFromBuffer(buffer, BitmapPixelFormat.Bgra8, width, height);
+        private async Task EvaluateImageAsync(string imagePath, string modelPath) {
+            var selectedStorageFile = await StorageFile.GetFileFromPathAsync(imagePath);
+            SoftwareBitmap softwareBitmap;
+            using (var stream = await selectedStorageFile.OpenAsync(FileAccessMode.Read))
+            {
+                // Create the decoder from the stream 
+                var decoder = await BitmapDecoder.CreateAsync(stream);
+                // Get the SoftwareBitmap representation of the file in BGRA8 format
+                softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                softwareBitmap = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8,
+                    BitmapAlphaMode.Premultiplied);
+            }
+
+            // Encapsulate the image within a VideoFrame to be bound and evaluated
             var inputImage = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
 
             if (_model == null) {
                 var modelFile = await StorageFile.GetFileFromPathAsync(modelPath);
-                _model = new GoogLeNetPlacesModel();
-                var learningModel = await LearningModelPreview.LoadModelFromStorageFileAsync(modelFile);
-                _model.LearningModel = learningModel;
+                _model = new SqueezeNetModel { LearningModel = await LearningModel.LoadFromStorageFileAsync(modelFile) };
+                _model.Session = new LearningModelSession(_model.LearningModel, new LearningModelDevice(LearningModelDeviceKind.Default));
+                _model.Binding = new LearningModelBinding(_model.Session);
             }
 
+            if (_model == null) { return; }
+            var input = new SqueezeNetInput {
+                image = ImageFeatureValue.CreateFromVideoFrame(inputImage)
+            };
+
             try {
-                if (_model != null) {
-                    var startTime = DateTime.Now;
-                    var input = new GoogLeNetPlacesModelInput {
-                        sceneImage = inputImage
-                    };
-                    if (await _model.EvaluateAsync(input) is GoogLeNetPlacesModelOutput res) {
-                        var results = res.SceneLabelProbs.Select(kv => new LabelResult {
-                                Label = kv.Key,
-                                Result = (float) Math.Round(kv.Value * 100, 2)
-                            })
-                            .ToList();
-                        results.Sort((p1, p2) => p2.Result.CompareTo(p1.Result));
-                        var costTime = (DateTime.Now - startTime).TotalSeconds;
-                        Trace("Time taken to evaluate", costTime, "seconds");
-                        DispatchEvent(Result, res.SceneLabel.FirstOrDefault());
-                    }
-                }
+                var output = (SqueezeNetOutput)await _model.EvaluateAsync(input);
+                var (label, probability) = output.classLabelProbs.FirstOrDefault();
+                DispatchEvent(Result, probability + ", "+ label);
             }
             catch (Exception ex) {
                 Trace(ex.Message, ex.StackTrace);

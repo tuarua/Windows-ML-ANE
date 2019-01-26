@@ -1,7 +1,5 @@
 package com.tuarua {
 import com.tuarua.fre.ANEError;
-
-import flash.display.BitmapData;
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
@@ -35,8 +33,8 @@ public class MLANE extends EventDispatcher {
         }
     }
 
-    public function predict(bitmapData:BitmapData, modelPath:String):void {
-        var theRet:* = ctx.call("predict", bitmapData, modelPath);
+    public function predict(imagePath:String, modelPath:String):void {
+        var theRet:* = ctx.call("predict", imagePath, modelPath);
         if (theRet is ANEError) {
             throw theRet as ANEError;
         }
