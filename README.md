@@ -34,14 +34,13 @@ If you are using the 64bit version for release follow the above instructions rep
 ### Prerequisites
 
 You will need:
- - Windows 10 April Update 2018 (1803)
+ - Windows 10 October Update 2018 (1809)
  - .NET 4.7
- - AIRSDK 29
+ - AIRSDK 32
  - Visual Studio 2017
  
  
 ### References
  - https://docs.microsoft.com/en-gb/windows/uwp/machine-learning/
- - https://github.com/ChangweiZhang/Awesome-WindowsML-ONNX-Models
  - https://blogs.windows.com/buildingapps/2017/01/25/calling-windows-10-apis-desktop-application/#3h4lsKlIalPxRWet.97
  - https://msdn.microsoft.com/en-us/library/windows/desktop/mt695951(v=vs.85).aspx
