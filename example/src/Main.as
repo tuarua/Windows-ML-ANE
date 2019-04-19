@@ -8,33 +8,63 @@ import flash.desktop.NativeApplication;
 import flash.display.Bitmap;
 
 import flash.display.Sprite;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.filesystem.File;
+import flash.text.AntiAliasType;
+import flash.text.Font;
 import flash.text.TextField;
+import flash.text.TextFormat;
+
+import views.SimpleButton;
 
 [SWF(width="700", height="700", frameRate="60", backgroundColor="#FFFFFF")]
 public class Main extends Sprite {
     [Embed(source="cat.jpg")]
     public static const TestImage:Class;
-    private var textField:TextField = new TextField();
+
+    public static const FONT:Font = new FiraSansSemiBold();
+    private var btnZip:SimpleButton = new SimpleButton("Detect Image");
+    private var statusLabel:TextField = new TextField();
     private var ane:MLANE = new MLANE();
     private var testImage:Bitmap = new TestImage() as Bitmap;
 
     public function Main() {
+        stage.align = StageAlign.TOP_LEFT;
+        stage.scaleMode = StageScaleMode.NO_SCALE;
+
         NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
-        textField.x = 10;
-        textField.width = 200;
         testImage.y = 50;
         addChild(testImage);
         ane.addEventListener(MLEvent.RESULT, onANEEvent);
         ane.init();
-        addChild(textField);
-        stage.addEventListener(MouseEvent.CLICK, onStageClick);
+
+        btnZip.x = (stage.stageWidth - 200) * 0.5;
+        btnZip.y = 10;
+        btnZip.addEventListener(MouseEvent.CLICK, onZipClick);
+        addChild(btnZip);
+
+        var tf:TextFormat = new TextFormat(Main.FONT.fontName, 13, 0x222222);
+        tf.align = "center";
+
+        statusLabel.defaultTextFormat = tf;
+        statusLabel.width = stage.stageWidth;
+        statusLabel.y = btnZip.y + 50;
+
+        statusLabel.wordWrap = statusLabel.multiline = false;
+        statusLabel.selectable = false;
+        statusLabel.embedFonts = true;
+        statusLabel.antiAliasType = AntiAliasType.ADVANCED;
+        statusLabel.sharpness = -100;
+
+        addChild(statusLabel);
+
     }
 
-    private function onStageClick(event:MouseEvent):void {
-        textField.text = "Analyzing image";
+    private function onZipClick(event:MouseEvent):void {
+        statusLabel.text = "Analyzing image...";
         try {
             ane.predict(File.applicationDirectory.resolvePath("cat.jpg").nativePath,
                     File.applicationDirectory.resolvePath("SqueezeNet.onnx").nativePath);
@@ -43,11 +73,10 @@ public class Main extends Sprite {
             trace(e.message);
             trace(e.getStackTrace());
         }
-
     }
 
     private function onANEEvent(event:MLEvent):void {
-        textField.text = event.params;
+        statusLabel.text = event.params;
     }
 
     private function onExiting(event:Event):void {
