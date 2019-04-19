@@ -8,6 +8,9 @@
             <entry library-name="MLANE" library-level="project">
               <dependency linkage="Merged" />
             </entry>
+            <entry library-name="libs" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
           <sdk name="AIRSDK_32" />
         </dependencies>
@@ -33,5 +36,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="HelloWorldANE" level="project" />
     <orderEntry type="library" exported="" name="MLANE" level="project" />
+    <orderEntry type="library" exported="" name="libs" level="project" />
   </component>
 </module>

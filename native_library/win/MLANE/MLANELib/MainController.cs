@@ -16,6 +16,7 @@ using FREContext = System.IntPtr;
 
 namespace MLANELib {
     public interface IMachineLearningInput { }
+
     public class MainController : FreSharpMainController {
         private SqueezeNetModel _model;
         private const string Result = "MLANE.OnModelResult";
@@ -30,13 +31,15 @@ namespace MLANELib {
             return FunctionsDict.Select(kvp => kvp.Key).ToArray();
         }
 
-        public FREObject Predict(FREContext ctx, uint argc, FREObject[] argv) {
+        private FREObject Predict(FREContext ctx, uint argc, FREObject[] argv) {
             if (argv[0] == FREObject.Zero) {
                 return FREObject.Zero;
             }
+
             if (argv[1] == FREObject.Zero) {
                 return FREObject.Zero;
             }
+
             var imagePath = argv[0].AsString();
             var modelPath = argv[1].AsString();
             try {
@@ -45,14 +48,14 @@ namespace MLANELib {
             catch (Exception e) {
                 return new FreException(e).RawValue;
             }
+
             return FREObject.Zero;
         }
 
         private async Task EvaluateImageAsync(string imagePath, string modelPath) {
             var selectedStorageFile = await StorageFile.GetFileFromPathAsync(imagePath);
             SoftwareBitmap softwareBitmap;
-            using (var stream = await selectedStorageFile.OpenAsync(FileAccessMode.Read))
-            {
+            using (var stream = await selectedStorageFile.OpenAsync(FileAccessMode.Read)) {
                 // Create the decoder from the stream 
                 var decoder = await BitmapDecoder.CreateAsync(stream);
                 // Get the SoftwareBitmap representation of the file in BGRA8 format
@@ -66,27 +69,31 @@ namespace MLANELib {
 
             if (_model == null) {
                 var modelFile = await StorageFile.GetFileFromPathAsync(modelPath);
-                _model = new SqueezeNetModel { LearningModel = await LearningModel.LoadFromStorageFileAsync(modelFile) };
-                _model.Session = new LearningModelSession(_model.LearningModel, new LearningModelDevice(LearningModelDeviceKind.Default));
+                _model = new SqueezeNetModel {LearningModel = await LearningModel.LoadFromStorageFileAsync(modelFile)};
+                _model.Session = new LearningModelSession(_model.LearningModel,
+                    new LearningModelDevice(LearningModelDeviceKind.Default));
                 _model.Binding = new LearningModelBinding(_model.Session);
             }
 
-            if (_model == null) { return; }
+            if (_model == null) {
+                return;
+            }
+
             var input = new SqueezeNetInput {
-                image = ImageFeatureValue.CreateFromVideoFrame(inputImage)
+                Image = ImageFeatureValue.CreateFromVideoFrame(inputImage)
             };
 
             try {
-                var output = (SqueezeNetOutput)await _model.EvaluateAsync(input);
+                var output = (SqueezeNetOutput) await _model.EvaluateAsync(input);
                 var (label, probability) = output.classLabelProbs.FirstOrDefault();
-                DispatchEvent(Result, probability + ", "+ label);
+                DispatchEvent(Result, probability + ", " + label);
             }
             catch (Exception ex) {
                 Trace(ex.Message, ex.StackTrace);
             }
         }
 
-        public FREObject InitController(FREContext ctx, uint argc, FREObject[] argv) {
+        private FREObject InitController(FREContext ctx, uint argc, FREObject[] argv) {
             return FREObject.Zero;
         }
 

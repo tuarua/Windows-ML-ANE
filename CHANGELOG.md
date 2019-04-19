@@ -1,3 +1,6 @@
+### 0.0.6
+- Updated to FreSharp 2.2.0
+
 ### 0.0.5
 - Updated to FreSharp 2.1.0
 - Updated to Windows 1809 and release version of Windows.AI.MachineLearning
