@@ -3,8 +3,9 @@
     <id>Main</id>
     <filename>Main</filename>
     <name>Main</name>
-    <versionNumber>0.0.0</versionNumber>
+    <versionNumber>0.0.8</versionNumber>
     <extensions>
+        <extensionID>com.tuarua.FreSharp</extensionID>
         <extensionID>com.tuarua.MLANE</extensionID>
     </extensions>
     <initialWindow>

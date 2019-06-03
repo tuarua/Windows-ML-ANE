@@ -1,5 +1,9 @@
+### 0.0.8
+- Use shared FreSharpANE
+- Package C# dlls into ANE to make self-contained. 
+
 ### 0.0.7
-- WIN: updated Json.NET to 12.0.2
+- updated Json.NET to 12.0.2
 
 ### 0.0.6
 - Updated to FreSharp 2.2.0
