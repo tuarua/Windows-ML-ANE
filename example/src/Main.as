@@ -1,4 +1,5 @@
 package {
+import com.tuarua.FreSharp;
 import com.tuarua.MLANE;
 import com.tuarua.MLEvent;
 import com.tuarua.fre.ANEError;
@@ -22,6 +23,7 @@ import views.SimpleButton;
 
 [SWF(width="700", height="700", frameRate="60", backgroundColor="#FFFFFF")]
 public class Main extends Sprite {
+    private var freSharpANE:FreSharp = new FreSharp();//must create before all others
     [Embed(source="cat.jpg")]
     public static const TestImage:Class;
 
@@ -81,6 +83,7 @@ public class Main extends Sprite {
 
     private function onExiting(event:Event):void {
         ane.dispose();
+        freSharpANE.dispose();
     }
 }
 }
